@@ -6,11 +6,11 @@ import io
 # Function to calculate the price based on the number of items
 def calculate_price(num_items):
     if num_items <= 3:
-        return 75
+        return 75 * 1.45  # Small tier with 45% margin
     elif 4 <= num_items <= 7:
-        return 150
+        return 150 * 1.45  # Medium tier with 45% margin
     else:
-        return 225 + (num_items - 7) * 25
+        return (225 + (num_items - 7) * 25) * 1.45  # Large tier with 45% margin
 
 # Function to calculate the total cost with margin
 def calculate_total_cost(base_delivery_cost, duties_taxes, margin=0.45):
@@ -27,18 +27,18 @@ payment_method = st.selectbox("Payment method", ["PO", "Card", "Retainer"])
 
 # Calculate prices
 pick_pack_price = calculate_price(num_items)
-total_cost = calculate_total_cost(base_delivery_cost, duties_taxes)
+total_cost = calculate_total_cost(base_delivery_cost, duties_taxes) + pick_pack_price
 
 # Display summary
 st.subheader("Summary")
-st.write(f"Pick and Pack Price: £{pick_pack_price}")
+st.write(f"Pick and Pack Price (including 45% margin): £{pick_pack_price:.2f}")
 st.write(f"Total Cost (including 45% margin): £{total_cost:.2f}")
 st.write(f"Payment Method: {payment_method}")
 
 # Create a DataFrame for the quote
 quote_data = {
     "Description": [
-        "Pick and Pack Price",
+        "Pick and Pack Price (including 45% margin)",
         "Base Delivery Cost",
         "Duties & Taxes",
         "Total Cost (including 45% margin)"
@@ -68,4 +68,3 @@ st.download_button(
     file_name="Pick_and_Pack_Quote.xlsx",
     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 )
-    
